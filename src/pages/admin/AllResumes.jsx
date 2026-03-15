@@ -8,40 +8,54 @@ export default function AllResumes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/applications', {
-          credentials: 'include' // Needed to pass verify admin JWT token cookie
-        });
-        const data = await res.json();
-        if (data.success) {
-          // Map backend mongoose schema models into flat table friendly models
-          const formattedApps = data.applications.map(app => ({
-            id: app._id,
-            applicantName: app.applicantName,
-            email: app.email,
-            phone: app.phone,
-            jobTitle: app.jobId ? app.jobId.title : 'Unknown Job',
-            workMode: app.workMode,
-            experience: app.experience,
-            currentCtc: app.currentCtc || 'N/A',
-            expectedCtc: app.expectedCtc,
-            status: app.status,
-            resume: app.resume
-          }));
-          setLocalApplications(formattedApps);
-        } else {
-          setError('Failed to load applications');
-        }
-      } catch (err) {
-        setError('Network error loading applications');
-      } finally {
-        setLoading(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page,
+        limit: 3,
+        ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter && statusFilter !== 'all' && { status: statusFilter })
+      });
+
+      const res = await fetch(`http://localhost:5000/api/applications?${queryParams}`, {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.success) {
+        const formattedApps = (data.data?.data || []).map(app => ({
+          id: app._id,
+          applicantName: app.applicantName,
+          email: app.email,
+          phone: app.phone,
+          jobTitle: app.jobId ? app.jobId.title : 'Unknown Job',
+          workMode: app.workMode,
+          experience: app.experience,
+          currentCtc: app.currentCtc || 'N/A',
+          expectedCtc: app.expectedCtc,
+          status: app.status,
+          resume: app.resume
+        }));
+        setLocalApplications(formattedApps);
+        setTotalPages(data.data?.pagination?.totalPages || 1);
+      } else {
+        setError('Failed to load applications');
       }
-    };
+    } catch (err) {
+      setError('Network error loading applications');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchApplications();
-  }, []);
+  }, [page, searchTerm, statusFilter]);
 
   // Handle status change (passed to ResumeTable)
   const handleStatusChange = async (applicationId, newStatus) => {
@@ -90,14 +104,39 @@ export default function AllResumes() {
 
       {error ? (
         <div className="text-red-500 bg-red-50 p-4 rounded-lg">{error}</div>
-      ) : loading ? (
-        <div className="text-gray-500 p-4">Fetching resumes...</div>
       ) : (
-        /* Reusable Table Component */
-        <ResumeTable 
-          applications={localApplications} 
-          onStatusChange={handleStatusChange} 
-        />
+        <>
+          <ResumeTable
+            applications={localApplications}
+            onStatusChange={handleStatusChange}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            loading={loading}
+          />
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50"
+              >
+                Previous
+              </button>
+              <span className="text-gray-600 font-medium">Page {page} of {totalPages}</span>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+                className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

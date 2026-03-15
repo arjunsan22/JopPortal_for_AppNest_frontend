@@ -13,7 +13,7 @@ export default function ApplicationModal({ open, onClose, application }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       ></div>
@@ -35,7 +35,7 @@ export default function ApplicationModal({ open, onClose, application }) {
               </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition"
           >
@@ -46,7 +46,7 @@ export default function ApplicationModal({ open, onClose, application }) {
         {/* Body */}
         <div className="px-6 py-6 overflow-y-auto space-y-6">
           <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-            
+
             {/* Email */}
             <div>
               <p className="text-sm font-medium text-gray-500 mb-1">Email</p>
@@ -96,19 +96,13 @@ export default function ApplicationModal({ open, onClose, application }) {
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
-          <button 
+          <button
             onClick={onClose}
             className="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
           >
             Close
           </button>
-          <button 
-            onClick={handleDownload}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 font-medium"
-          >
-            <Download size={18} />
-            View Resume
-          </button>
+
         </div>
       </div>
     </div>

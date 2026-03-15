@@ -3,23 +3,17 @@ import { Search, Filter, Download, Eye, FileText, User } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import ApplicationModal from './ApplicationModal';
 
-export default function ResumeTable({ applications, onStatusChange }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+export default function ResumeTable({ 
+  applications, 
+  onStatusChange, 
+  searchTerm, 
+  setSearchTerm, 
+  statusFilter, 
+  setStatusFilter,
+  loading
+}) {
   const [selectedApp, setSelectedApp] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-
-  // Filter applications
-  const filteredApplications = applications.filter(app => {
-    const matchesSearch =
-      app.applicantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
 
   return (
     <div className="space-y-6">
@@ -91,8 +85,15 @@ export default function ResumeTable({ applications, onStatusChange }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {filteredApplications.length > 0 ? (
-                filteredApplications.map((app) => (
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-500">Loading applications...</p>
+                  </td>
+                </tr>
+              ) : applications.length > 0 ? (
+                applications.map((app) => (
                   <tr key={app.id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4">
                       <div>
@@ -104,15 +105,6 @@ export default function ResumeTable({ applications, onStatusChange }) {
                       <p className="text-sm text-gray-900">{app.jobTitle}</p>
                       <p className="text-xs text-gray-500">{app.workMode}</p>
                     </td>
-                    {/* <td className="px-6 py-4">
-                      <p className="text-sm text-gray-900">{app.experience} years</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-gray-900">₹{app.currentCtc} LPA</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-medium text-gray-900">₹{app.expectedCtc} LPA</p>
-                    </td> */}
                     <td className="px-6 py-4">
                       <StatusBadge status={app.status} />
                     </td>
@@ -140,7 +132,7 @@ export default function ResumeTable({ applications, onStatusChange }) {
                     </td>
                     <td className="px-6 py-4">
                       <button
-                        onClick={() => window.open(`http://localhost:5000${app.resume}`, '_blank')}
+                        onClick={() => window.open(`http://localhost:5000/api/applications/download/${app.resume}`, '_blank')}
                         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold
                             text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition cursor-pointer"
                       >

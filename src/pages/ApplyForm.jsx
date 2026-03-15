@@ -16,7 +16,7 @@ export default function ApplyForm() {
         const res = await fetch(`http://localhost:5000/api/job/${jobId}`);
         const data = await res.json();
         if (data.success) {
-          setJob(data.job);
+          setJob(data.data?.job);
         } else {
           setError('Failed to fetch job');
         }

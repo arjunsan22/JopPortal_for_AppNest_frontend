@@ -24,7 +24,7 @@ export default function JobDetails() {
         const data = await res.json();
         
         if (data.success) {
-          setJob(data.job);
+          setJob(data.data?.job);
         } else {
           setError(data.message || 'Failed to fetch job');
         }

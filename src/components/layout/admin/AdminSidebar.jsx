@@ -1,9 +1,9 @@
 // src/components/layout/admin/AdminSidebar.jsx
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Settings, 
+import {
+  LayoutDashboard,
+  FileText,
+  Settings,
   LogOut,
   Briefcase
 } from 'lucide-react';
@@ -21,6 +21,11 @@ export default function AdminSidebar() {
       name: 'All Resumes',
       path: '/admin/resumes',
       icon: FileText
+    },
+    {
+      name: 'All Jobs',
+      path: '/admin/all-jobs',
+      icon: Briefcase
     },
     {
       name: 'Post Job',
@@ -85,10 +90,9 @@ export default function AdminSidebar() {
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  isActive
-                    ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
+                  ? 'bg-blue-50 text-blue-600 font-medium'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`
               }
             >
@@ -101,7 +105,7 @@ export default function AdminSidebar() {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-100 mt-auto">
-        <button 
+        <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50 rounded-lg transition"
         >

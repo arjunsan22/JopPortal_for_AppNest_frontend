@@ -13,10 +13,19 @@ export default function Home() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/job');
+        setLoading(true);
+        const queryParams = new URLSearchParams({
+          page: 1,
+          limit: 10,
+          ...(searchTerm && { search: searchTerm }),
+          ...(location && { location: location })
+        });
+
+        const res = await fetch(`http://localhost:5000/api/job?${queryParams}`);
         const data = await res.json();
         if (data.success) {
-          setJobs(data.jobs);
+          // The backend was updated to return pagination, so the array is under data.data
+          setJobs(data.data?.data || []);
         } else {
           setError('Failed to fetch jobs');
         }
@@ -27,13 +36,10 @@ export default function Home() {
       }
     };
     fetchJobs();
-  }, []);
+  }, [searchTerm, location]);
 
-  const filteredJobs = jobs.filter(job =>
-    (job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.company.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    job.location.toLowerCase().includes(location.toLowerCase())
-  );
+  // Make sure jobs are rendered
+  const filteredJobs = jobs || [];
 
   const popularTags = ["Remote", "Frontend", "Product Design", "Full-time", "Senior Role"];
 
@@ -48,7 +54,7 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -61,13 +67,13 @@ export default function Home() {
               Find your next <span className="text-blue-600">career milestone.</span>
             </h1>
             <p className="text-lg text-slate-600 mb-10 leading-relaxed">
-              We connect the world's most ambitious designers and engineers with 
+              We connect the world's most ambitious designers and engineers with
               companies building the future. No fluff, just opportunities.
             </p>
           </motion.div>
 
           {/* --- MODERN SEARCH BAR --- */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -76,8 +82,8 @@ export default function Home() {
             <div className="bg-white p-2 md:p-3 rounded-2xl shadow-2xl shadow-blue-100 border border-slate-100 flex flex-col md:flex-row items-center gap-2">
               <div className="flex-1 flex items-center w-full px-4 border-b md:border-b-0 md:border-r border-slate-100">
                 <Search className="text-slate-400 mr-3" size={20} />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Job title or company"
                   className="w-full py-3 focus:outline-none text-slate-700 placeholder:text-slate-400"
                   value={searchTerm}
@@ -86,8 +92,8 @@ export default function Home() {
               </div>
               <div className="flex-1 flex items-center w-full px-4">
                 <MapPin className="text-slate-400 mr-3" size={20} />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Location (e.g. Remote)"
                   className="w-full py-3 focus:outline-none text-slate-700 placeholder:text-slate-400"
                   value={location}
@@ -130,7 +136,7 @@ export default function Home() {
         ) : error ? (
           <div className="text-center py-20 text-red-500 bg-red-50 rounded-2xl border border-red-100">{error}</div>
         ) : (
-          <motion.div 
+          <motion.div
             layout
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
@@ -161,7 +167,7 @@ export default function Home() {
           </motion.div>
         )}
 
-       
+
       </main>
     </div>
   );

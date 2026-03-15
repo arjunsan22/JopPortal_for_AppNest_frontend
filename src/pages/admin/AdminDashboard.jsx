@@ -21,8 +21,8 @@ export default function AdminDashboard() {
         });
         const data = await res.json();
         if (data.success) {
-          setStats(data.stats);
-          setRecentActivity(data.recentActivity);
+          setStats(data.data?.stats || { total: 0, pending: 0, selected: 0, rejected: 0 });
+          setRecentActivity(data.data?.recentActivity || []);
         }
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
@@ -44,9 +44,10 @@ export default function AdminDashboard() {
     return `${Math.floor(diffInSeconds / 86400)} days ago`;
   };
 
-  const conversionRate = stats.total > 0 ? Math.round((stats.selected / stats.total) * 100) : 0;
-  const pendingRate = stats.total > 0 ? Math.round((stats.pending / stats.total) * 100) : 0;
-  const rejectionRate = stats.total > 0 ? Math.round((stats.rejected / stats.total) * 100) : 0;
+  const currentStats = stats || { total: 0, pending: 0, selected: 0, rejected: 0 };
+  const conversionRate = currentStats.total > 0 ? Math.round((currentStats.selected / currentStats.total) * 100) : 0;
+  const pendingRate = currentStats.total > 0 ? Math.round((currentStats.pending / currentStats.total) * 100) : 0;
+  const rejectionRate = currentStats.total > 0 ? Math.round((currentStats.rejected / currentStats.total) * 100) : 0;
 
   return (
     <div className="space-y-8">
@@ -60,25 +61,25 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Applications"
-          value={loading ? "..." : stats.total}
+          value={loading ? "..." : currentStats.total}
           icon={FileText}
           color="blue"
         />
         <StatsCard
           title="Pending Review"
-          value={loading ? "..." : stats.pending}
+          value={loading ? "..." : currentStats.pending}
           icon={Clock}
           color="yellow"
         />
         <StatsCard
           title="Selected"
-          value={loading ? "..." : stats.selected}
+          value={loading ? "..." : currentStats.selected}
           icon={CheckCircle}
           color="green"
         />
         <StatsCard
           title="Rejected"
-          value={loading ? "..." : stats.rejected}
+          value={loading ? "..." : currentStats.rejected}
           icon={XCircle}
           color="red"
         />
