@@ -12,6 +12,7 @@ import AllResumes from '../pages/admin/AllResumes';
 import Login from '../pages/auth/Login'
 import PostJob from '../pages/admin/PostJob'
 import AllJobs from '../pages/admin/AllJobs';
+import ApplyedJobs from '../pages/ApplyedJobs'
 
 const getUser = () => {
   const user = localStorage.getItem('user');
@@ -78,6 +79,16 @@ export default function AppRouter() {
             <Navbar />
             <main className="flex-grow">
               <ApplyForm />
+            </main>
+            <Footer />
+          </div>
+        } />
+
+        <Route path="/applied-jobs" element={
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">
+              <ApplyedJobs />
             </main>
             <Footer />
           </div>

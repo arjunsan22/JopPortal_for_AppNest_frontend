@@ -20,6 +20,9 @@ export default function Navbar() {
             <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium">
               Find Jobs
             </Link>
+            <Link to="/applied-jobs" className="text-gray-700 hover:text-blue-600 font-medium">
+              Applied Jobs
+            </Link>
 
           </div>
         </div>
