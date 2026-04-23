@@ -20,7 +20,7 @@ export default function JobDetails() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/job/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job/${id}`);
         const data = await res.json();
         
         if (data.success) {

@@ -132,7 +132,7 @@ export default function ResumeTable({
                     </td>
                     <td className="px-6 py-4">
                       <button
-                        onClick={() => window.open(`http://localhost:5000/api/applications/download/${app.resume}`, '_blank')}
+                        onClick={() => window.open(`${import.meta.env.VITE_API_URL}/api/applications/download/${app.resume}`, '_blank')}
                         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold
                             text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition cursor-pointer"
                       >

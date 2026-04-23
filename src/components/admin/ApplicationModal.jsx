@@ -7,7 +7,7 @@ export default function ApplicationModal({ open, onClose, application }) {
 
   const handleDownload = () => {
     // Assuming backend serves files from /public/resumes...
-    window.open(`http://localhost:5000${application.resume}`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL}${application.resume}`, '_blank');
   };
 
   return (

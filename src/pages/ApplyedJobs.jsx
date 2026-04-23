@@ -31,7 +31,7 @@ export default function ApplyedJobs() {
                 queryParams.append('search', searchTerm.trim());
             }
 
-            const res = await fetch(`http://localhost:5000/api/applications/applied?${queryParams}`);
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/applied?${queryParams}`);
             const data = await res.json();
             
             if (res.ok && data.success) {

@@ -27,7 +27,7 @@ export default function AllJobs() {
                 ...(location && { location: location })
             });
 
-            const res = await fetch(`http://localhost:5000/api/job?${queryParams}`);
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job?${queryParams}`);
             const data = await res.json();
             if (data.success) {
                 setJobs(data.data?.data || []);
@@ -73,7 +73,7 @@ export default function AllJobs() {
     const handleDelete = (jobId) => {
         confirmAction("Are you sure you want to delete this job?", "Delete", async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/job/${jobId}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job/${jobId}`, {
                     method: 'DELETE',
                     credentials: 'include'
                 });
@@ -106,7 +106,7 @@ export default function AllJobs() {
                     requirements: formattedRequirements
                 };
 
-                const res = await fetch(`http://localhost:5000/api/job/${editingJob._id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job/${editingJob._id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',

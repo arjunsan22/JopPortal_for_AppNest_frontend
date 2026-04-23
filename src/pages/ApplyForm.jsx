@@ -13,7 +13,7 @@ export default function ApplyForm() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/job/${jobId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job/${jobId}`);
         const data = await res.json();
         if (data.success) {
           setJob(data.data?.job);
@@ -73,7 +73,7 @@ export default function ApplyForm() {
     data.append("resume", formData.resume); // Multer expects this exact property name
 
     try {
-      const response = await fetch("http://localhost:5000/api/applications/apply", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/apply`, {
         method: "POST",
         body: data, // Using FormData, let the browser define matching Content-Type and boundaries
       });

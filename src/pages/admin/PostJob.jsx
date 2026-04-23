@@ -38,7 +38,7 @@ export default function PostJob() {
         .split('\n')
         .filter(req => req.trim() !== '');
 
-      const response = await fetch('http://localhost:5000/api/job', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/job`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

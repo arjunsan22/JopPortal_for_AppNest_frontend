@@ -23,7 +23,7 @@ export default function AllResumes() {
         ...(statusFilter && statusFilter !== 'all' && { status: statusFilter })
       });
 
-      const res = await fetch(`http://localhost:5000/api/applications?${queryParams}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/applications?${queryParams}`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -68,7 +68,7 @@ export default function AllResumes() {
       );
 
       // Async backend update
-      const res = await fetch(`http://localhost:5000/api/applications/${applicationId}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/${applicationId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

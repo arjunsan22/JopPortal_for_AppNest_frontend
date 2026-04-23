@@ -21,7 +21,7 @@ export default function Home() {
           ...(location && { location: location })
         });
 
-        const res = await fetch(`http://localhost:5000/api/job?${queryParams}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/job?${queryParams}`);
         const data = await res.json();
         if (data.success) {
           // The backend was updated to return pagination, so the array is under data.data
